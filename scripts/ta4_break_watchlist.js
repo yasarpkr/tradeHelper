@@ -13,6 +13,9 @@ const altrankOld = list.altrankOld;
 
 let test = async() => {
 
+    console.log('Yeni 5. element'+altrankNew[5].s)
+    console.log('Eski 5. element'+altrankOld[5].s)
+
     // Define arrays
     let dataListOld = [];
     let observedListAll = [];
@@ -164,8 +167,8 @@ let test = async() => {
                                     break50EmaList[countA].fifteenminVPower = element.fifteenminVPower;
                                     break50EmaList[countA].breaks = element.breaks; 
                                     break50EmaList[countA].altrank = element2.acr;
-                                    break50EmaList[countA].alt_old = element3.acr
-                                    break50EmaList[countA].alt_24p = element2.acr_p 
+                                    break50EmaList[countA].alt_old = element3.acr;
+                                    break50EmaList[countA].alt_24p = element2.acr_p;
                                     countA++;
                                     break;
                                 }
@@ -341,39 +344,39 @@ let test = async() => {
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringforFile)
     
-            if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
-                var transporter = nodemailer.createTransport({
-                    host: "smtp-mail.outlook.com", // hostname
-                    secureConnection: false, // TLS requires secureConnection to be false
-                    port: 587, // port for secure SMTP
-                    auth: {
-                        user: "lunarboatPi@outlook.com",
-                        pass: "368-93Ya"
-                    },
-                    tls: {
-                        ciphers:'SSLv3'
-                    }
-                });
+    //         if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
+    //             var transporter = nodemailer.createTransport({
+    //                 host: "smtp-mail.outlook.com", // hostname
+    //                 secureConnection: false, // TLS requires secureConnection to be false
+    //                 port: 587, // port for secure SMTP
+    //                 auth: {
+    //                     user: "lunarboatPi@outlook.com",
+    //                     pass: "368-93Ya"
+    //                 },
+    //                 tls: {
+    //                     ciphers:'SSLv3'
+    //                 }
+    //             });
                     
-                var mailOptions = {
-                    from: 'lunarboatPi@outlook.com',
-                    to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                    subject: 'Sending Email using Node.js',
-                    text: stringforFile
-                };
+    //             var mailOptions = {
+    //                 from: 'lunarboatPi@outlook.com',
+    //                 to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
+    //                 subject: 'Sending Email using Node.js',
+    //                 text: stringforFile
+    //             };
                     
-                transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Email sent: ' + info.response);
-                    }
-                    });
+    //             transporter.sendMail(mailOptions, function(error, info){
+    //                 if (error) {
+    //                     console.log(error);
+    //                 } else {
+    //                     console.log('Email sent: ' + info.response);
+    //                 }
+    //                 });
 
-                await wait(1 * 1000 * 60 * 10 ) // wait last integer minute 
-            } else {
-                console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
-            }
+    //             await wait(1 * 1000 * 60 * 10 ) // wait last integer minute 
+    //         } else {
+    //             console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
+    //         }
             
             
 
