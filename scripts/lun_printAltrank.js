@@ -2,7 +2,8 @@
 const {sendPostRequest,now,wait,fetchVolumeArray} = require('../config/sente.js');
 const fs = require('fs');
 const axios = require('axios');
-const altrankNew = require('../config/altrankList.js')
+const list = require('../config/altrankList.js');
+const altrankNew = list.altrankNew;
 
 let test = async() => {
 
@@ -29,11 +30,12 @@ let test = async() => {
 
     let rsp_getList = await getList()
     if(!Array.isArray(altrankNew)){
-        fileString = 'let altrankListNew = [\n';
+        console.log('altrankNew bir dizi değildir')
+        fileString = 'let altrankNew = [\n';
         for(let element of rsp_getList){
         fileString += '   '+JSON.stringify(element) + ',\n'
         }
-        fileString += ']\n\nmodule.exports = altrankListNew;';
+        fileString += ']\n\nexports.altrankNew = altrankNew; \n';
 
         // Write data in 'Output.txt' .
         await fs.writeFile('../config/altrankList.js',fileString, (err) => {
@@ -42,6 +44,7 @@ let test = async() => {
     } 
 
     if(Array.isArray(altrankNew)){
+        console.log('altrankNew bir dizidir eski değerleri ile eşitliği kontrol ediliyor')
         // Control new Array is equal to old or not 
         equalArrays = true
         for(let a = 0 ;a < 50; a++){
@@ -54,21 +57,22 @@ let test = async() => {
             }
         }
         if(equalArrays == true){console.log('Altrank Listesi zaten eşittir')}
-        else{ 
+        else{
+            console.log('Altrank değerleri eskileri ile eşit değildir') 
             // Create old list
             altrankOld = altrankNew 
-            fileString = 'let altrankListOld = [\n';
+            fileString = 'let altrankOld = [\n';
             for(let element of altrankOld){
             fileString += '   '+JSON.stringify(element) + ',\n'
             }
-            fileString += ']\n\nmodule.exports = altrankListOld;\n';
+            fileString += ']\n\nexports.altrankOld = altrankOld;\n';
             
             // Create new list
-            fileString += 'let altrankListNew = [\n';
+            fileString += 'let altrankNew = [\n';
             for(let element of rsp_getList){
                 fileString += '   '+JSON.stringify(element) + ',\n'
             }
-            fileString += ']\n\nmodule.exports = altrankListNew;\n';
+            fileString += ']\n\nexports.altrankNew = altrankNew;\n';
             
             // Write data in 'Output.txt' .
             await fs.writeFile('../config/altrankList.js',fileString, (err) => {

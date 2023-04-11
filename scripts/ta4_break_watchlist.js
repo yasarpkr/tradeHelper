@@ -7,9 +7,10 @@ const dateTime = require("node-datetime");
 const bullishArray = require('../config/bullish.js');
 const blacklist = require('../config/ta4_blacklist.js')
 const axios = require('axios');
-const altrankNew = require('../config/altrankList.js');
-const altrankOld = require('../config/altrankList.js');
-
+const list = require('../config/altrankList.js');
+const altrankNew = list.altrankNew;
+const altrankOld = list.altrankOld;
+F
 let test = async() => {
 
     // Define arrays
