@@ -10,7 +10,7 @@ const axios = require('axios');
 const list = require('../config/altrankList.js');
 const altrankNew = list.altrankNew;
 const altrankOld = list.altrankOld;
-F
+
 let test = async() => {
 
     // Define arrays
@@ -94,7 +94,7 @@ let test = async() => {
             let observedListNew = [];
 
             // Get Upper values of the dataListNew
-            let neededPercantage = 400;
+            let neededPercantage = 300;
             countF = 0;
             for (let element3 of dataListNew){
                 if (element3.fifteenminVPower > neededPercantage && (element3.rsi6 > 50 || element3.rsi14 > 50)){
