@@ -250,6 +250,9 @@ let test = async() => {
                     }
                 }
             }
+
+            
+
             if(bullishDetector.length > 0){
                 stringforFile += `\n[${now()}] - Bullish Trend Coin Volume Up Detector \n ------------------------------------------------------\n`
                 for(element of bullishDetector){
