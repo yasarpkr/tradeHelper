@@ -73,13 +73,13 @@ let test = async() => {
             await wait(1 * 1000 * 1 ) // wait last integer minute
             maintainCalculation = false; // console.log(dataListOld)
         }  
-        // if(dataListOld.length > 0 && dataListNew[0].fifteenminVPower == dataListOld[0].fifteenminVPower && dataListNew[1].fifteenminVPower == dataListOld[1].fifteenminVPower && dataListNew[2].fifteenminVPower == dataListOld[2].fifteenminVPower && dataListNew[3].fifteenminVPower == dataListOld[3].fifteenminVPower && dataListNew[4].fifteenminVPower == dataListOld[4].fifteenminVPower && dataListNew[5].fifteenminVPower == dataListOld[5].fifteenminVPower) {
-        //     console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler esittir. Mail gönderilmeyecek`) ;
-        //     triggerMail = false;
-        //     maintainCalculation = true 
-        //     await wait(1 * 1000 * 60 ) // wait last integer minute} 
+        if(dataListOld.length > 0 && dataListNew[0].fifteenminVPower == dataListOld[0].fifteenminVPower && dataListNew[1].fifteenminVPower == dataListOld[1].fifteenminVPower && dataListNew[2].fifteenminVPower == dataListOld[2].fifteenminVPower && dataListNew[3].fifteenminVPower == dataListOld[3].fifteenminVPower && dataListNew[4].fifteenminVPower == dataListOld[4].fifteenminVPower && dataListNew[5].fifteenminVPower == dataListOld[5].fifteenminVPower) {
+            console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler esittir. Mail gönderilmeyecek`) ;
+            triggerMail = false;
+            maintainCalculation = true 
+            await wait(1 * 1000 * 60 ) // wait last integer minute} 
 
-        // } else {
+        } else {
             console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler değişti. Hesaplama sürdürülüyor`) ;
 
             // Some emptyness definitions
@@ -93,7 +93,7 @@ let test = async() => {
             let observedListNew = [];
 
             // Get Upper values of the dataListNew
-            let neededPercantage = 100;
+            let neededPercantage = 400;
             countF = 0;
             for (let element3 of dataListNew){
                 if (element3.fifteenminVPower > neededPercantage && (element3.rsi6 > 50 || element3.rsi14 > 50)){
@@ -152,8 +152,7 @@ let test = async() => {
             break50EmaList = [];
             countA = 0;
             for(let element of upperList){
-                // if (element.breaks.ema50 == 'Yes' && blacklist.indexOf(element.coin) < 0) { 
-                if (blacklist.indexOf(element.coin) < 0) { 
+                if (element.breaks.ema50 == 'Yes' && blacklist.indexOf(element.coin) < 0) { 
                     for(let element2 of altrankNewFirst150){
                         if(element.coin == element2.s){
                             for(let element3 of altrankOld){
@@ -341,43 +340,43 @@ let test = async() => {
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringforFile)
     
-            // if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
-            //     var transporter = nodemailer.createTransport({
-            //         host: "smtp-mail.outlook.com", // hostname
-            //         secureConnection: false, // TLS requires secureConnection to be false
-            //         port: 587, // port for secure SMTP
-            //         auth: {
-            //             user: "lunarboatPi@outlook.com",
-            //             pass: "368-93Ya"
-            //         },
-            //         tls: {
-            //             ciphers:'SSLv3'
-            //         }
-            //     });
+            if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
+                var transporter = nodemailer.createTransport({
+                    host: "smtp-mail.outlook.com", // hostname
+                    secureConnection: false, // TLS requires secureConnection to be false
+                    port: 587, // port for secure SMTP
+                    auth: {
+                        user: "lunarboatPi@outlook.com",
+                        pass: "368-93Ya"
+                    },
+                    tls: {
+                        ciphers:'SSLv3'
+                    }
+                });
                     
-            //     var mailOptions = {
-            //         from: 'lunarboatPi@outlook.com',
-            //         to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-            //         subject: 'Sending Email using Node.js',
-            //         text: stringforFile
-            //     };
+                var mailOptions = {
+                    from: 'lunarboatPi@outlook.com',
+                    to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
+                    subject: 'Sending Email using Node.js',
+                    text: stringforFile
+                };
                     
-            //     transporter.sendMail(mailOptions, function(error, info){
-            //         if (error) {
-            //             console.log(error);
-            //         } else {
-            //             console.log('Email sent: ' + info.response);
-            //         }
-            //         });
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                    });
 
                 await wait(1 * 1000 * 60 * 10 ) // wait last integer minute 
-            // } else {
-            //     console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
-            // }
+            } else {
+                console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
+            }
             
             
 
-        // } 
+        } 
            
     } 
 
