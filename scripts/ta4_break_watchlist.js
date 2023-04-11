@@ -6,8 +6,9 @@ const avarageList15m = require('../config/15mAvarageList_4hBased.js')
 const dateTime = require("node-datetime");
 const bullishArray = require('../config/bullish.js');
 const blacklist = require('../config/ta4_blacklist.js')
-
-
+const axios = require('axios');
+const altrankNew = require('../config/altrankList.js');
+const altrankOld = require('../config/altrankList.js');
 
 let test = async() => {
 
@@ -72,13 +73,13 @@ let test = async() => {
             await wait(1 * 1000 * 1 ) // wait last integer minute
             maintainCalculation = false; // console.log(dataListOld)
         }  
-        if(dataListOld.length > 0 && dataListNew[0].fifteenminVPower == dataListOld[0].fifteenminVPower && dataListNew[1].fifteenminVPower == dataListOld[1].fifteenminVPower && dataListNew[2].fifteenminVPower == dataListOld[2].fifteenminVPower && dataListNew[3].fifteenminVPower == dataListOld[3].fifteenminVPower && dataListNew[4].fifteenminVPower == dataListOld[4].fifteenminVPower && dataListNew[5].fifteenminVPower == dataListOld[5].fifteenminVPower) {
-            console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler esittir. Mail gönderilmeyecek`) ;
-            triggerMail = false;
-            maintainCalculation = true 
-            await wait(1 * 1000 * 60 ) // wait last integer minute} 
+        // if(dataListOld.length > 0 && dataListNew[0].fifteenminVPower == dataListOld[0].fifteenminVPower && dataListNew[1].fifteenminVPower == dataListOld[1].fifteenminVPower && dataListNew[2].fifteenminVPower == dataListOld[2].fifteenminVPower && dataListNew[3].fifteenminVPower == dataListOld[3].fifteenminVPower && dataListNew[4].fifteenminVPower == dataListOld[4].fifteenminVPower && dataListNew[5].fifteenminVPower == dataListOld[5].fifteenminVPower) {
+        //     console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler esittir. Mail gönderilmeyecek`) ;
+        //     triggerMail = false;
+        //     maintainCalculation = true 
+        //     await wait(1 * 1000 * 60 ) // wait last integer minute} 
 
-        } else {
+        // } else {
             console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler değişti. Hesaplama sürdürülüyor`) ;
 
             // Some emptyness definitions
@@ -92,7 +93,7 @@ let test = async() => {
             let observedListNew = [];
 
             // Get Upper values of the dataListNew
-            let neededPercantage = 300;
+            let neededPercantage = 100;
             countF = 0;
             for (let element3 of dataListNew){
                 if (element3.fifteenminVPower > neededPercantage && (element3.rsi6 > 50 || element3.rsi14 > 50)){
@@ -140,19 +141,44 @@ let test = async() => {
                 countP++
             } 
 
+            // Get Altrank Top Coins
+            altrankNewFirst150 = [];
+            for(let a = 0 ; a < 150 ; a++){
+                altrankNewFirst150.push(altrankNew[a])
+            }
+
+
             // Crop upper list for mail outline 
             break50EmaList = [];
             countA = 0;
             for(let element of upperList){
-                if (element.breaks.ema50 == 'Yes' && blacklist.indexOf(element.coin) < 0) { 
-                break50EmaList[countA] = {};
-                break50EmaList[countA].coin = element.coin;
-                break50EmaList[countA].rsi6 = element.rsi6;
-                break50EmaList[countA].fifteenminVPower = element.fifteenminVPower;
-                break50EmaList[countA].breaks = element.breaks; 
-                countA++;
+                // if (element.breaks.ema50 == 'Yes' && blacklist.indexOf(element.coin) < 0) { 
+                if (blacklist.indexOf(element.coin) < 0) { 
+                    for(let element2 of altrankNewFirst150){
+                        if(element.coin == element2.s){
+                            for(let element3 of altrankOld){
+                                if(element.coin == element3.s){
+                                    break50EmaList[countA] = {};
+                                    break50EmaList[countA].coin = element.coin;
+                                    break50EmaList[countA].rsi6 = element.rsi6;
+                                    break50EmaList[countA].fifteenminVPower = element.fifteenminVPower;
+                                    break50EmaList[countA].breaks = element.breaks; 
+                                    break50EmaList[countA].altrank = element2.acr;
+                                    break50EmaList[countA].alt_old = element3.acr
+                                    break50EmaList[countA].alt_24p = element2.acr_p 
+                                    countA++;
+                                    break;
+                                }
+                            }
+                        break;
+                        }
+                    }
+                
                 }
             }
+
+
+            console.log('Breaklist boyutu'+break50EmaList.length)
 
             // Find coins will be delete from observeList
             if(observedListAll.length > 0){
@@ -200,7 +226,7 @@ let test = async() => {
                     };
                 };
             };
-            console.log(`Watchlist new length : ${observedListAll.length}`)
+            // console.log(`Watchlist new length : ${observedListAll.length}`)
 
             // Push upperList Power items to observeds
             newPowerItem = false
@@ -228,9 +254,24 @@ let test = async() => {
             let observedListMail = [];
             for(element of observedListAll){
                 if(element.state == 'Changed' && element.powerCount >= 1 && blacklist.indexOf(element.coin) < 0 ){
-                    observedListMail.push(element)
+                    for(let element2 of altrankNewFirst150){
+                        if(element.coin == element2.s){
+                            for(let element3 of altrankOld){
+                                if(element.coin == element3.s){
+                                    element.altrank = element2.acr
+                                    element.alt_old = element3.acr
+                                    element.alt_24p = element2.acr_p
+                                    observedListMail.push(element)
+                                    break;
+                                }
+                            }
+                        break;
+                        }
+                    }
                 }
             }
+
+
             // console.log(upperList)
             
             bullishDetector = [];
@@ -240,18 +281,28 @@ let test = async() => {
             for(let element of bullishArray){
                 if(JSON.stringify(upperList).indexOf(element.coin) > -1  && blacklist.indexOf(element.coin) < 0){
                     for(let element2 of upperList){
-                        if(element == element2){
-                            bullishDetector[countB] = {};
-                            bullishDetector[countB].coin = element.coin
-                            bullishDetector[countB].power = element2.fifteenminVPower
-                            countB++
-                            break;
+                        if(element.coin == element2.coin){
+                            for(let element3 of altrankNewFirst150){
+                                if(element.coin == element3.s){
+                                    for(let element4 of altrankOld)
+                                        if(element.coin == element4.s){
+                                            bullishDetector[countB] = {};
+                                            bullishDetector[countB].coin = element.coin
+                                            bullishDetector[countB].power = element2.fifteenminVPower
+                                            bullishDetector[countB].altrank = element3.acr
+                                            bullishDetector[countB].alt_old = element4.acr
+                                            bullishDetector[countB].alt_24p = element3.acr_p
+                                            countB++
+                                            break;
+                                        }
+                                break;   
+                                }
+                            }
+                        break;
                         } 
                     }
                 }
             }
-
-            
 
             if(bullishDetector.length > 0){
                 stringforFile += `\n[${now()}] - Bullish Trend Coin Volume Up Detector \n ------------------------------------------------------\n`
@@ -288,45 +339,45 @@ let test = async() => {
             // console.log(linkListOfLunar)
 
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
-            // console.log(stringforFile)
+            console.log(stringforFile)
     
-            if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
-                var transporter = nodemailer.createTransport({
-                    host: "smtp-mail.outlook.com", // hostname
-                    secureConnection: false, // TLS requires secureConnection to be false
-                    port: 587, // port for secure SMTP
-                    auth: {
-                        user: "lunarboatPi@outlook.com",
-                        pass: "368-93Ya"
-                    },
-                    tls: {
-                        ciphers:'SSLv3'
-                    }
-                });
+            // if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
+            //     var transporter = nodemailer.createTransport({
+            //         host: "smtp-mail.outlook.com", // hostname
+            //         secureConnection: false, // TLS requires secureConnection to be false
+            //         port: 587, // port for secure SMTP
+            //         auth: {
+            //             user: "lunarboatPi@outlook.com",
+            //             pass: "368-93Ya"
+            //         },
+            //         tls: {
+            //             ciphers:'SSLv3'
+            //         }
+            //     });
                     
-                var mailOptions = {
-                    from: 'lunarboatPi@outlook.com',
-                    to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                    subject: 'Sending Email using Node.js',
-                    text: stringforFile
-                };
+            //     var mailOptions = {
+            //         from: 'lunarboatPi@outlook.com',
+            //         to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
+            //         subject: 'Sending Email using Node.js',
+            //         text: stringforFile
+            //     };
                     
-                transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Email sent: ' + info.response);
-                    }
-                    });
+            //     transporter.sendMail(mailOptions, function(error, info){
+            //         if (error) {
+            //             console.log(error);
+            //         } else {
+            //             console.log('Email sent: ' + info.response);
+            //         }
+            //         });
 
-                await wait(1 * 1000 * 60 ) // wait last integer minute 
-            } else {
-                console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
-            }
+                await wait(1 * 1000 * 60 * 10 ) // wait last integer minute 
+            // } else {
+            //     console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
+            // }
             
             
 
-        } 
+        // } 
            
     } 
 
