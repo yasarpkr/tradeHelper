@@ -267,6 +267,7 @@ let test = async() => {
                                     element.altrank = element2.acr
                                     element.alt_old = element3.acr
                                     element.alt_24p = element2.acr_p
+                                    element.powe
                                     observedListMail.push(element)
                                     break;
                                 }
