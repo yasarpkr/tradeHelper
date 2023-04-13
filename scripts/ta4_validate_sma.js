@@ -84,6 +84,7 @@ let test = async() => {
             }  
 
             stringMail += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
+            console.log(stringMail)
 
             // var transporter = nodemailer.createTransport({
             //     host: "smtp-mail.outlook.com", // hostname
