@@ -243,6 +243,7 @@ let test = async() => {
                         if(element.coin == observeds.coin){
                             observedListAll[countS].powerCount++
                             observedListAll[countS].state = 'Changed'
+                            observedListAll[countS].power = element.fifteenminVPower
                             newPowerItem = true
                             break;
                         }
