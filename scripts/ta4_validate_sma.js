@@ -83,35 +83,35 @@ let test = async() => {
                 stringMail += JSON.stringify(element) + '\n'
             }  
 
-            stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
+            stringMail += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
 
-            var transporter = nodemailer.createTransport({
-                host: "smtp-mail.outlook.com", // hostname
-                secureConnection: false, // TLS requires secureConnection to be false
-                port: 587, // port for secure SMTP
-                auth: {
-                    user: "lunarboatPi@outlook.com",
-                    pass: "368-93Ya"
-                },
-                tls: {
-                    ciphers:'SSLv3'
-                }
-            });
+            // var transporter = nodemailer.createTransport({
+            //     host: "smtp-mail.outlook.com", // hostname
+            //     secureConnection: false, // TLS requires secureConnection to be false
+            //     port: 587, // port for secure SMTP
+            //     auth: {
+            //         user: "lunarboatPi@outlook.com",
+            //         pass: "368-93Ya"
+            //     },
+            //     tls: {
+            //         ciphers:'SSLv3'
+            //     }
+            // });
                 
-            var mailOptions = {
-                from: 'lunarboatPi@outlook.com',
-                to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                subject: 'Sending Email using Node.js',
-                text: stringforFile
-            };
+            // var mailOptions = {
+            //     from: 'lunarboatPi@outlook.com',
+            //     to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
+            //     subject: 'Sending Email using Node.js',
+            //     text: stringMail
+            // };
                 
-            await transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('Email sent: ' + info.response);
-                }
-                });
+            // await transporter.sendMail(mailOptions, function(error, info){
+            //     if (error) {
+            //         console.log(error);
+            //     } else {
+            //         console.log('Email sent: ' + info.response);
+            //     }
+            //     });
 
             await wait(1 * 1000 * 60  ) // wait last integer minute 
         } else {
