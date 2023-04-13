@@ -114,7 +114,7 @@ let test = async() => {
             //     }
             //     });
 
-            await wait(1 * 1000 * 60  ) // wait last integer minute 
+            // await wait(1 * 1000 * 60  ) // wait last integer minute 
         } else {
             console.log(`[${now()}] - Bugün getirilen değerlerde M Avarage broked görülmemektedir`)
            }
