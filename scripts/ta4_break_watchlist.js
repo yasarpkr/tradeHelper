@@ -12,17 +12,20 @@ let test = async() => {
     let observedListAll = [];
     
     while(true){
-        // Delete module caches
-        delete require.cache[require.resolve('../config/altrankList.js')];
-        delete require.cache[require.resolve('../config/bullish.js')];
-        delete require.cache[require.resolve('../config/ta4_blacklist.js')];
-        delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
+
+        try{
+            // Delete module caches
+            delete require.cache[require.resolve('../config/altrankList.js')];
+            delete require.cache[require.resolve('../config/bullish.js')];
+            delete require.cache[require.resolve('../config/ta4_blacklist.js')];
+            delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
+        } catch(e){console.log(e)}
 
         // Reload modules 
-        bullishArray = require('../config/bullish.js');
-        altranklist = require('../config/altrankList.js')
-        blacklist = require('../config/ta4_blacklist.js')
-        avarageList15m = require('../config/15mAvarageList_4hBased.js')
+        const bullishArray = require('../config/bullish.js');
+        const altranklist = require('../config/altrankList.js')
+        const blacklist = require('../config/ta4_blacklist.js')
+        const avarageList15m = require('../config/15mAvarageList_4hBased.js')
 
         altrankNew = altranklist.altrankNew;
         altrankOld = altranklist.altrankOld;
@@ -102,7 +105,7 @@ let test = async() => {
             let observedListNew = [];
 
             // Get Upper values of the dataListNew
-            let neededPercantage = 350;
+            let neededPercantage = 300;
             countF = 0;
             for (let element3 of dataListNew){
                 if (element3.fifteenminVPower > neededPercantage && (element3.rsi6 > 50 || element3.rsi14 > 50)){
@@ -152,7 +155,7 @@ let test = async() => {
             
             // Get Altrank Top Coins
             altrankNewFirst150 = [];
-            for(let a = 0 ; a < 150 ; a++){
+            for(let a = 0 ; a < 80 ; a++){
                 altrankNewFirst150.push(altrankNew[a])
             }
 
