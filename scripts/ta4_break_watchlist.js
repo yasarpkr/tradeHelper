@@ -2,22 +2,30 @@
 const {sendPostRequest,now,wait,fetchVolumeArray} = require('../config/sente.js');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
-const avarageList15m = require('../config/15mAvarageList_4hBased.js')
 const dateTime = require("node-datetime");
-const bullishArray = require('../config/bullish.js');
-const blacklist = require('../config/ta4_blacklist.js')
 const axios = require('axios');
-const list = require('../config/altrankList.js');
-const altrankNew = list.altrankNew;
-const altrankOld = list.altrankOld;
+
 
 let test = async() => {
-
     // Define arrays
     let dataListOld = [];
     let observedListAll = [];
-
+    
     while(true){
+        // Delete module caches
+        delete require.cache[require.resolve('../config/altrankList.js')];
+        delete require.cache[require.resolve('../config/bullish.js')];
+        delete require.cache[require.resolve('../config/ta4_blacklist.js')];
+        delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
+
+        // Reload modules 
+        bullishArray = require('../config/bullish.js');
+        altranklist = require('../config/altrankList.js')
+        blacklist = require('../config/ta4_blacklist.js')
+        avarageList15m = require('../config/15mAvarageList_4hBased.js')
+
+        altrankNew = altranklist.altrankNew;
+        altrankOld = altranklist.altrankOld;
 
         // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
         let timeValue = '15m'
