@@ -86,35 +86,34 @@ let test = async() => {
             stringMail += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringMail)
 
-            // var transporter = nodemailer.createTransport({
-            //     host: "smtp-mail.outlook.com", // hostname
-            //     secureConnection: false, // TLS requires secureConnection to be false
-            //     port: 587, // port for secure SMTP
-            //     auth: {
-            //         user: "lunarboatPi@outlook.com",
-            //         pass: "368-93Ya"
-            //     },
-            //     tls: {
-            //         ciphers:'SSLv3'
-            //     }
-            // });
+            var transporter = nodemailer.createTransport({
+                host: "smtp-mail.outlook.com", // hostname
+                secureConnection: false, // TLS requires secureConnection to be false
+                port: 587, // port for secure SMTP
+                auth: {
+                    user: "lunarboatPi@outlook.com",
+                    pass: "368-93Ya"
+                },
+                tls: {
+                    ciphers:'SSLv3'
+                }
+            });
                 
-            // var mailOptions = {
-            //     from: 'lunarboatPi@outlook.com',
-            //     to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-            //     subject: 'Sending Email using Node.js',
-            //     text: stringMail
-            // };
+            var mailOptions = {
+                from: 'lunarboatPi@outlook.com',
+                to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
+                subject: 'Sending Email using Node.js',
+                text: stringMail
+            };
                 
-            // await transporter.sendMail(mailOptions, function(error, info){
-            //     if (error) {
-            //         console.log(error);
-            //     } else {
-            //         console.log('Email sent: ' + info.response);
-            //     }
-            //     });
+            await transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+                });
 
-            // await wait(1 * 1000 * 60  ) // wait last integer minute 
         } else {
             console.log(`[${now()}] - Bugün getirilen değerlerde M Avarage broked görülmemektedir`)
            }

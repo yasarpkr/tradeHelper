@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const dateTime = require("node-datetime");
 const axios = require('axios');
 
-let test = async() => {
+let test = async(fetchInterval='1d') => {
 
     await fs.readFile('../config/smaList.js',(err) => {
         if (err){
@@ -23,7 +23,6 @@ let test = async() => {
     if(!Array.isArray(New)){
         console.log('MA değerlerini içeren yeni array oluşturulacak...')
         // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
-        let timeValue = `${fetchInterval}`
         let sessionid = 'filterbycoin=false; coinsfilters=; o2s-chl=18f3aa8a559cf34c719f177dd22f75df; indicatorsfilters=["Market","Price (USDT)","CLOSE/SMA12 (%)","CLOSE/SMA25 (%)","CLOSE/SMA50 (%)","CLOSE/SMA99 (%)"]'
         let res = await sendPostRequest(`https://ta4crypto.com/market-reports/${fetchInterval}/?filters=true`,{},{headers: {Cookie: `${sessionid}`}})             
 
@@ -66,7 +65,6 @@ let test = async() => {
         console.log('Listede eski ve yeni değerler değişecek')
         Old = New;
         // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
-        let timeValue = `${fetchInterval}`
         let sessionid = 'filterbycoin=false; coinsfilters=; o2s-chl=18f3aa8a559cf34c719f177dd22f75df; indicatorsfilters=["Market","Price (USDT)","CLOSE/SMA12 (%)","CLOSE/SMA25 (%)","CLOSE/SMA50 (%)","CLOSE/SMA99 (%)"]'
         let res = await sendPostRequest(`https://ta4crypto.com/market-reports/${fetchInterval}/?filters=true`,{},{headers: {Cookie: `${sessionid}`}})             
 
@@ -113,4 +111,4 @@ let test = async() => {
     } 
 }
 
-test(fetchInterval='15m');
+test();
