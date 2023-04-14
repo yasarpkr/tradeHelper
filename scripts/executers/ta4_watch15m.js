@@ -1,6 +1,7 @@
 // Imports
-const {sendPostRequest,now,wait,fetchVolumeArray} = require('../config/sente.js');
+const {sendPostRequest,now,wait,fetchVolumeArray} = require('../../config/sente.js');
 const fs = require('fs');
+const fsPromises = require('fs').promises;
 const nodemailer = require('nodemailer');
 const dateTime = require("node-datetime");
 const axios = require('axios');
@@ -10,23 +11,32 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
     // Define arrays
     let dataListOld = [];
     let observedListAll = [];
+
+    filePath = {}
+    filePath.bullish = '../../config/bullish.txt'
+    filePath.altrankList = '../../config/altrankList.txt'
+    filePath.blackList = '../../config/ta4_blacklist.txt'
+    filePath.avarageList15m = '../../config/15mAvarage.txt'
+
+    async function readCsv(filePath) {
+        const content = await fsPromises.readFile(filePath,'utf-8');
+        return content;
+    }
     
     while(true){
         try{
-        // Delete module caches
-        delete require.cache[require.resolve('../config/altrankList.js')];
-        delete require.cache[require.resolve('../config/bullish.js')];
-        delete require.cache[require.resolve('../config/ta4_blacklist.js')];
-        delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
+    
+        rsp_Bullish = await readCsv(filePath.bullish)
+        rsp_altranklist = await readCsv(filePath.altrankList)
+        rsp_blacklist = await readCsv(filePath.blackList)
+        rsp_avarageList15m = await readCsv(filePath.avarageList15m)
 
-        // Reload modules 
-        const bullishArray = require('../config/bullish.js');
-        const altranklist = require('../config/altrankList.js')
-        const blacklist = require('../config/ta4_blacklist.js')
-        const avarageList15m = require('../config/15mAvarageList_4hBased.js')
-
-        altrankNew = altranklist.altrankNew;
-        altrankOld = altranklist.altrankOld;
+        bullishArray = JSON.parse(rsp_Bullish).bullishArray
+        avarageList15m = JSON.parse(rsp_avarageList15m).avarageList15m
+        blacklist = rsp_blacklist
+        altrankNew = JSON.parse(rsp_altranklist).New
+        altrankOld = JSON.parse(rsp_altranklist).Old
+        
 
         // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
         let timeValue = '15m'
@@ -89,7 +99,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
             maintainCalculation = true 
             await wait(1 * 1000 * 60 ) // wait last integer minute} 
 
-        } else {
+        // } else {
             console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler değişti. Hesaplama sürdürülüyor`) ;
 
             // Some emptyness definitions
@@ -346,6 +356,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
 
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringforFile)
+            await wait (10 * 1000)
     
             if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
                 var transporter = nodemailer.createTransport({
@@ -383,7 +394,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
             }
         } 
        
-        }catch(e){console.log(e)}
+        } catch(e) {console.log(e)}
     } 
 }
 

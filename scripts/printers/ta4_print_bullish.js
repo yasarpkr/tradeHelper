@@ -1,14 +1,12 @@
 // Imports
-const {sendPostRequest,now,wait,fetchVolumeArray} = require('../config/sente.js');
+const {sendPostRequest} = require('../../config/sente.js');
 const fs = require('fs');
-const nodemailer = require('nodemailer');
-const avarageList15m = require('../config/15mAvarageList_4hBased.js')
-const dateTime = require("node-datetime");
 
-let test = async() => {
+let test = async(timeValue = '1d') => {
+
+    let textFile = '../../config/bullish.txt'
 
     // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
-    let timeValue = '1d'
     let sessionid = 'filterbycoin=false; coinsfilters=; o2s-chl=ebda447adc6b735ea63eb640ef99795d; indicatorsfilters=["Market","Price (USDT)","Volume (M USDT)","RSI 6","RSI 14","MACD Divergence/CLOSE (%)","CLOSE/EMA12 (%)","CLOSE/EMA25 (%)","CLOSE/EMA50 (%)"]'
     let res = await sendPostRequest(`https://ta4crypto.com/market-reports/${timeValue}/?filters=true`,{},{headers: {Cookie: `${sessionid}`}})             
 
@@ -22,44 +20,42 @@ let test = async() => {
 
     // Change stucture of Array like [{},{}]
     startCount = 0;
-    let dataListNew = [];
+    let dataList = [];
     for(let element of coinAndVolume){
-        dataListNew[startCount] = {};
-        dataListNew[startCount].coin = element[0]
-        dataListNew[startCount].ema25 = element[4]
-        dataListNew[startCount].ema50 = element[5]
-        dataListNew[startCount].rsi6 = element[6]
-        dataListNew[startCount].rsi14 = element[7]
+        dataList[startCount] = {};
+        dataList[startCount].coin = element[0]
+        dataList[startCount].ema25 = element[4]
+        dataList[startCount].ema50 = element[5]
+        dataList[startCount].rsi6 = element[6]
+        dataList[startCount].rsi14 = element[7]
         startCount++;
     }
 
-    // console.log(dataListNew)
+    // console.log(dataList)
     let bullishArray = [];
-    for(let element of dataListNew){
+    for(let element of dataList){
         if(element.ema25 > 0 && element.ema50 > 0 && element.rsi14 > 60){
             bullishArray.push(element);
         }
     }
 
     // console.log(bullishArray)
-    // console.log(bullishArray.length)
 
-    // JSON.stringify(bullishArray)
-    let listString = ''
-    listString += `let bullishArray = `
-    listString += `${JSON.stringify(bullishArray)}\n\n`
-    listString += 'module.exports = bullishArray;'
-
+    // JSON.stringify(bullishArray) bullishArray
+    listString = `{\n"bullishArray" : [`
+    let countA = 0;
+    for(let element of bullishArray){
+        if(countA !== bullishArray.length - 1){
+            listString += '\n' + JSON.stringify(element) + ','
+        } else {listString += '\n' + JSON.stringify(element) + '\n]\n}'} 
+        countA++;
+    }
+    // console.log(listString)
     
     // Write data in 'Output.txt' .
-    await fs.writeFile('../config/bullish.js', listString, (err) => {       
-        // In case of a error throw err.
+    await fs.writeFile(textFile, listString, (err) => {       
         if (err) throw err;
     })
-
-    
-
-
 }
 
 test();

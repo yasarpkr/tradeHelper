@@ -1,5 +1,3 @@
-let blacklist = `
-
 {"coin":"SSV"},
 {"coin":"PAXG"},
 {"coin":"UNFI"},
@@ -155,7 +153,3 @@ let blacklist = `
 {"coin":"GNO"},
 {"coin":"WNXM"},
 {"coin":"NBT"}
-
-`
-
-module.exports = blacklist;
