@@ -2,7 +2,7 @@
 const {sendPostRequest,now,wait,fetchVolumeArray} = require('../config/sente.js');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
-const avarageList15m = require('../config/15mAvarageList_dayBased.js')
+// const avarageList15m = require('../config/15mAvarageList_dayBased.js')
 
 
 let test = async() => {
