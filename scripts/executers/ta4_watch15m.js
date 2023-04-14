@@ -99,7 +99,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
             maintainCalculation = true 
             await wait(1 * 1000 * 60 ) // wait last integer minute} 
 
-        // } else {
+        } else {
             console.log(`\n\n[${now()}] - [INFO] - Getirilen değerler değişti. Hesaplama sürdürülüyor`) ;
 
             // Some emptyness definitions
@@ -356,7 +356,6 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
 
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringforFile)
-            await wait (10 * 1000)
     
             if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
                 var transporter = nodemailer.createTransport({
@@ -379,7 +378,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
                     text: stringforFile
                 };
                     
-                await transporter.sendMail(mailOptions, function(error, info){
+                transporter.sendMail(mailOptions, function(error, info){
                     if (error) {
                         console.log(error);
                     } else {
