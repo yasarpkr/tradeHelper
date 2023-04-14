@@ -6,7 +6,7 @@ const dateTime = require("node-datetime");
 const axios = require('axios');
 const smaList = require('../config/smaList.js');
 
-let test = async() => {
+let test = async(mailaddress="yasillunar@outlook.com") => {
     
     New = smaList.New
     Old = smaList.Old
@@ -91,7 +91,7 @@ let test = async() => {
                 secureConnection: false, // TLS requires secureConnection to be false
                 port: 587, // port for secure SMTP
                 auth: {
-                    user: "lunarboatPi@outlook.com",
+                    user: mailaddress,
                     pass: "368-93Ya"
                 },
                 tls: {
@@ -100,9 +100,9 @@ let test = async() => {
             });
                 
             var mailOptions = {
-                from: 'lunarboatPi@outlook.com',
+                from: mailaddress,
                 to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                subject: 'Sending Email using Node.js',
+                subject: `[Yas,ikr] - Validate Sma 1D - [like coin:${breaksChanged[0].coin}] - [${now()}]`,
                 text: stringMail
             };
                 

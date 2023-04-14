@@ -6,20 +6,18 @@ const dateTime = require("node-datetime");
 const axios = require('axios');
 
 
-let test = async() => {
+let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage = 300) => {
     // Define arrays
     let dataListOld = [];
     let observedListAll = [];
     
     while(true){
-
         try{
-            // Delete module caches
-            delete require.cache[require.resolve('../config/altrankList.js')];
-            delete require.cache[require.resolve('../config/bullish.js')];
-            delete require.cache[require.resolve('../config/ta4_blacklist.js')];
-            delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
-        } catch(e){console.log(e)}
+        // Delete module caches
+        delete require.cache[require.resolve('../config/altrankList.js')];
+        delete require.cache[require.resolve('../config/bullish.js')];
+        delete require.cache[require.resolve('../config/ta4_blacklist.js')];
+        delete require.cache[require.resolve('../config/15mAvarageList_4hBased.js')];
 
         // Reload modules 
         const bullishArray = require('../config/bullish.js');
@@ -105,7 +103,6 @@ let test = async() => {
             let observedListNew = [];
 
             // Get Upper values of the dataListNew
-            let neededPercantage = 300;
             countF = 0;
             for (let element3 of dataListNew){
                 if (element3.fifteenminVPower > neededPercantage && (element3.rsi6 > 50 || element3.rsi14 > 50)){
@@ -155,7 +152,7 @@ let test = async() => {
             
             // Get Altrank Top Coins
             altrankNewFirst150 = [];
-            for(let a = 0 ; a < 80 ; a++){
+            for(let a = 0 ; a < altTop ; a++){
                 altrankNewFirst150.push(altrankNew[a])
             }
 
@@ -356,7 +353,7 @@ let test = async() => {
                     secureConnection: false, // TLS requires secureConnection to be false
                     port: 587, // port for secure SMTP
                     auth: {
-                        user: "lunarboatPi@outlook.com",
+                        user: mailaddress,
                         pass: "368-93Ya"
                     },
                     tls: {
@@ -365,9 +362,9 @@ let test = async() => {
                 });
                     
                 var mailOptions = {
-                    from: 'lunarboatPi@outlook.com',
+                    from: mailaddress,
                     to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                    subject: 'Sending Email using Node.js',
+                    subject: `[Yas,ikr] - Validate Sma 1D - [like coin:${observedListMail[0].coin}] - [${now()}]`,
                     text: stringforFile
                 };
                     
@@ -384,13 +381,10 @@ let test = async() => {
                 console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
                 await wait(1 * 1000 * 60  ) // wait last integer minute 
             }
-            
-            
-
         } 
-           
+       
+        }catch(e){console.log(e)}
     } 
-
 }
 
-test();
+test('lunarboatPi@outlook.com');
