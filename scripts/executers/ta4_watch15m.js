@@ -5,9 +5,22 @@ const fsPromises = require('fs').promises;
 const nodemailer = require('nodemailer');
 const dateTime = require("node-datetime");
 const axios = require('axios');
+const TelegramBot = require("node-telegram-bot-api")
 
 
-let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage = 300) => {
+let test = async(altTop=150,neededPercantage = 200) => {
+
+    const token = '5900164551:AAGxhA_Oii1p40OQ34dVxOW7V8pkRKpK7C4'
+    const bot = new TelegramBot(token, { polling: true })
+    let users = [];
+
+    bot.onText(/\/register/, (msg, match) => {
+    const chatId = msg.chat.id
+    users.push(chatId)
+    console.log('user registered')
+    bot.sendMessage(chatId, 'Done.')
+    })
+
     // Define arrays
     let dataListOld = [];
     let observedListAll = [];
@@ -22,6 +35,7 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
         const content = await fsPromises.readFile(filePath,'utf-8');
         return content;
     }
+
     
     while(true){
         try{
@@ -331,65 +345,75 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
             for(element of break50EmaList){
                 stringforFile += JSON.stringify(element) + '\n\n'
             }
+            // stringforFile += `\n[${now()}] - Watch List - [listLengthAll: ${observedListAll.length}] - [croppedLength: ${observedListMail.length}] \n ------------------------------------------------------\n`
+            // for(element of observedListMail){
+            //     stringforFile += JSON.stringify(element) + '\n\n'
+            // }
             stringforFile += `\n[${now()}] - Watch List - [listLengthAll: ${observedListAll.length}] - [croppedLength: ${observedListMail.length}] \n ------------------------------------------------------\n`
-            for(element of observedListMail){
+            for(element of observedListAll){
                 stringforFile += JSON.stringify(element) + '\n\n'
             }
         
-            // // Get list of lunarcrush links
-            // linkListOfLunar = [];
-            // countL  = 0
-            // for(let elements of break50EmaList){
-            //     // link pattern : https://lunarcrush.com/coins/uma/stafi?metric=close%2Csocial_score%2Calt_rank
-            //     coinName = elements.coin.toLowerCase()
-            //     linkListOfLunar[countL] = {};
-            //     linkListOfLunar[countL].coin = coinName
-            //     linkListOfLunar[countL].link = `https://lunarcrush.com/coins/${coinName}/stafi?metric=close%2Csocial_score%2Calt_rank`
-            //     countL ++;
-            // }
+        //     // // Get list of lunarcrush links
+        //     // linkListOfLunar = [];
+        //     // countL  = 0
+        //     // for(let elements of break50EmaList){
+        //     //     // link pattern : https://lunarcrush.com/coins/uma/stafi?metric=close%2Csocial_score%2Calt_rank
+        //     //     coinName = elements.coin.toLowerCase()
+        //     //     linkListOfLunar[countL] = {};
+        //     //     linkListOfLunar[countL].coin = coinName
+        //     //     linkListOfLunar[countL].link = `https://lunarcrush.com/coins/${coinName}/stafi?metric=close%2Csocial_score%2Calt_rank`
+        //     //     countL ++;
+        //     // }
     
-            // stringforFile += `\n\n\n[${now()}] - Coin link list in lunar crush . You can check! \n ------------------------------------------------------\n`
-            // for(element of linkListOfLunar){
-            //     stringforFile += JSON.stringify(element) + '\n\n'
-            // }
-            // console.log(linkListOfLunar)
+        //     // stringforFile += `\n\n\n[${now()}] - Coin link list in lunar crush . You can check! \n ------------------------------------------------------\n`
+        //     // for(element of linkListOfLunar){
+        //     //     stringforFile += JSON.stringify(element) + '\n\n'
+        //     // }
+        //     // console.log(linkListOfLunar)
 
             stringforFile += '\n\n ~~~~ Powered by İlker and Yasar ~~~~'
             console.log(stringforFile)
     
-            if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 ){
-                var transporter = nodemailer.createTransport({
-                    host: "smtp-mail.outlook.com", // hostname
-                    secureConnection: false, // TLS requires secureConnection to be false
-                    port: 587, // port for secure SMTP
-                    auth: {
-                        user: mailaddress,
-                        pass: "368-93Ya"
-                    },
-                    tls: {
-                        ciphers:'SSLv3'
-                    }
-                });
+            if (break50EmaList.length > 0 || bullishDetector.length > 0 || observedListMail.length > 0 && users.length > 0 ){
+                for (let i = 0; i < users.length; i++) {
+                    bot.sendMessage(users[i], stringforFile)
+                }    
+                // var transporter = nodemailer.createTransport({
+                //     host: "smtp-mail.outlook.com", // hostname
+                //     secureConnection: false, // TLS requires secureConnection to be false
+                //     port: 587, // port for secure SMTP
+                //     auth: {
+                //         user: mailaddress,
+                //         pass: "368-93Ya."
+                //     },
+                //     tls: {
+                //         ciphers:'SSLv3'
+                //     }
+                // });
                     
-                var mailOptions = {
-                    from: mailaddress,
-                    to: 'yasarpeker08@gmail.com,ilkernz@gmail.com',
-                    subject: `[Yas,ikr] - Validate Sma 1D - [like coin:${observedListMail[0].coin}] - [${now()}]`,
-                    text: stringforFile
-                };
+                // var mailOptions = {
+                //     from: mailaddress,
+                //     to: 'yasarpeker08@gmail.com',
+                //     // subject: `[Yas,ikr] - Validate Sma 1D - [like coin:${observedListMail[0].coin}] - [${now()}]`,
+                //     subject: `[Yas,ikr] - Validate Sma 1D - [like coin:] - [${now()}]`,
+                //     // text: stringforFile
+                //     text: 'SELAM'
+                // };
                     
-                transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Email sent: ' + info.response);
-                    }
-                    });
+                // transporter.sendMail(mailOptions, function(error, info){
+                //     if (error) {
+                //         console.log(error);
+                //     } else {
+                //         console.log('Email sent: ' + info.response);
+                //     }
+                //     });
+                await wait(1 * 1000 * 60  ) // wait last integer minute 
 
-                await wait(1 * 1000 * 60  ) // wait last integer minute 
             } else {
-                console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı')
-                await wait(1 * 1000 * 60  ) // wait last integer minute 
+                console.log('Listeler boş olduğundan dolayı mail gönderilmeye gerek duyulmadı') 
+                console.log('Requester list length: ' + users.length)
+                await wait(1 * 1000 * 60) // wait last integer minute 
             }
         } 
        
@@ -397,4 +421,4 @@ let test = async(mailaddress="yasillunar@outlook.com",altTop=80,neededPercantage
     } 
 }
 
-test('lunarboatPi@outlook.com');
+test();
