@@ -348,7 +348,7 @@ let test = async(altTop=150,neededPercantage = 200) => {
             stringforFile += `\n[${now()}] - Watch List - [listLengthAll: ${observedListAll.length}] - [croppedLength: ${observedListMail.length}] \n ------------------------------------------------------\n`
             for(element of observedListMail){
                 stringforFile += JSON.stringify(element) + '\n\n'
-            // }
+            }
             // stringforFile += `\n[${now()}] - Watch List - [listLengthAll: ${observedListAll.length}] - [croppedLength: ${observedListMail.length}] \n ------------------------------------------------------\n`
             // for(element of observedListAll){
             //     stringforFile += JSON.stringify(element) + '\n\n'
