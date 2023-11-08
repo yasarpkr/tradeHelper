@@ -5,16 +5,16 @@ const fsPromises = require('fs').promises;
 const nodemailer = require('nodemailer');
 const dateTime = require("node-datetime");
 const axios = require('axios');
-const TelegramBot = require("node-telegram-bot-api")
+const TelegramBot = require("node-telegram-bot-api");
 
 
 let test = async(altTop=150,neededPercantage = 200) => {
 
-    const token = '5900164551:AAGxhA_Oii1p40OQ34dVxOW7V8pkRKpK7C4'
+    const token = '6688357579:AAFpHoofp4gV6fUublHHi7yfVlTf6QR9FRI'
     const bot = new TelegramBot(token, { polling: true })
     let users = [];
 
-    bot.onText(/\/register/, (msg, match) => {
+    bot.onText(/[r,R]egister/, (msg, match) => {
     const chatId = msg.chat.id
     users.push(chatId)
     console.log('user registered')
@@ -24,14 +24,13 @@ let test = async(altTop=150,neededPercantage = 200) => {
     // Define arrays
     let rawData = {}
     rawData.old = [];
-    // let  = [];
     let watchList = [];
 
     filePath = {}
     filePath.bullish = '../../config/bullish.txt'
     filePath.altrankList = '../../config/altrankList.txt'
     filePath.blackList = '../../config/ta4_blacklist.txt'
-    filePath.avarageList15m = '../../config/15mAvarage.txt'
+    filePath.lst_ta4_4h = '../../config/lst_ta4_4h.out'
 
     async function readCsv(filePath) {
         const content = await fsPromises.readFile(filePath,'utf-8');
@@ -44,8 +43,8 @@ let test = async(altTop=150,neededPercantage = 200) => {
         whileCount++
         console.log(`[${now()}] - [WhileCount: ${whileCount}]`)
         rsp_blacklist = await readCsv(filePath.blackList)
-        rsp_avarageList15m = await readCsv(filePath.avarageList15m)
-        let avarageList15m = JSON.parse(rsp_avarageList15m).avarageList15m
+        rsp_lst_ta4_4h = await readCsv(filePath.lst_ta4_4h)
+        let lst_ta4_4h = JSON.parse(rsp_lst_ta4_4h).lst_ta4_4h
         let blacklist = rsp_blacklist
 
         // Send post request and get 15m  volume value , [adress: // https://ta4crypto.com/market-reports]
@@ -102,9 +101,10 @@ let test = async(altTop=150,neededPercantage = 200) => {
         // Compare 2 data , push power value to new array
         console.log(`\n[${now()}] - Dizi elemanlarına fifteenMinPower değeri hesaplanıp ekleniyor...`)
         for(let rdn of rawData.new){
-            for (al15 of avarageList15m){
-                if(rdn.coin == al15.coin) {
-                    fifteenminVPower = (rdn.fiftMinV / al15.fifteenMinAvgV * 100)
+            for (lst4h of lst_ta4_4h){
+                if(rdn.coin == lst4h.coin) {
+                    lst4h.fifteenMinAvgV = parseFloat((lst4h.fourHourV / 16).toFixed(3))
+                    fifteenminVPower = (rdn.fiftMinV / lst4h.fifteenMinAvgV * 100)
                     fifteenminVPower = parseFloat(fifteenminVPower.toFixed(3))
                     rdn.fifteenminVPower = fifteenminVPower // Datalist new including fifteenMinPow now
                     break;
