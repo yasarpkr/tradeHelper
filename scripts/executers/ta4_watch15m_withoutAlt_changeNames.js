@@ -207,7 +207,7 @@ let test = async(altTop=150,neededPercantage = 200) => {
             break50EmaList = [];
             countA = 0;
             for(let ul of upperList){
-                if (ul.breaks.ema50 == 'Yes' && blacklist.indexOf(ul.coin) < 0) { 
+                if (ul.breaks.ema50 == 'Yes' && blacklist.indexOf(`"${ul.coin}"`) < 0) { 
                                                       
                     break50EmaList[countA] = {};
                     break50EmaList[countA].coin = ul.coin;
@@ -312,7 +312,7 @@ let test = async(altTop=150,neededPercantage = 200) => {
             watchList.sort(function(a, b){return b.state - a.state});  // console.log(rawData.new)
             let watchListChanged = []
             for(let wl of watchList){
-                if(wl.state == 'Changed' && wl.powerCount >= 1 && blacklist.indexOf(wl.coin) < 0 ){
+                if(wl.state == 'Changed' && wl.powerCount >= 1 && blacklist.indexOf(`"${wl.coin}"`) < 0 ){
                     watchListChanged.push(wl)
                 }
             }
